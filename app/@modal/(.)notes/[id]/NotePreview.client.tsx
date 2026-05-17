@@ -1,17 +1,19 @@
 "use client";
-import { useRouter } from "next/navigation";
+
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { fetchNoteById } from "@/lib/api";
+import Modal from "@/components/Modal/Modal";
+
 import css from "@/components/NotePreview/NotePreview.module.css";
-import { use } from "react";
 
 interface Props {
-  params: Promise<{ id: string }>;
+  id: string;
 }
 
-export default function NotePreview({ params }: Props) {
-  const { id } = use(params);
+export default function NotePreviewClient({ id }: Props) {
   const router = useRouter();
+
   const {
     data: note,
     isLoading,
@@ -19,24 +21,27 @@ export default function NotePreview({ params }: Props) {
   } = useQuery({
     queryKey: ["note", id],
     queryFn: () => fetchNoteById(id),
+    refetchOnMount: false,
   });
 
   if (isLoading) return <p>Loading, please wait...</p>;
   if (isError || !note) return <p>Something went wrong.</p>;
 
   return (
-    <div className={css.container}>
-      <div className={css.item}>
-        <button className={css.backBtn} onClick={() => router.back()}>
-          Back
-        </button>
-        <div className={css.header}>
-          <h2>{note.title}</h2>
+    <Modal onClose={() => router.back()}>
+      <div className={css.container}>
+        <div className={css.item}>
+          <button className={css.backBtn} onClick={() => router.back()}>
+            Back
+          </button>
+          <div className={css.header}>
+            <h2>{note.title}</h2>
+          </div>
+          <p className={css.tag}>{note.tag}</p>
+          <p className={css.content}>{note.content}</p>
+          <p className={css.date}>{note.createdAt}</p>
         </div>
-        <p className={css.tag}>{note.tag}</p>
-        <p className={css.content}>{note.content}</p>
-        <p className={css.date}>{note.createdAt}</p>
       </div>
-    </div>
+    </Modal>
   );
 }
