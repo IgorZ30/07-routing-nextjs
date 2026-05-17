@@ -1,0 +1,12 @@
+{
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "trailingComa": "es5",
+  "bracketSpacing": true,
+  "jaxBracketSaneLine": false,
+  "arrowParens": "awoid",
+  "proseWrap": "always"
+}
